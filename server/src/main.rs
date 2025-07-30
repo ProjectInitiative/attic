@@ -41,7 +41,7 @@ struct Opts {
 
     /// A flag that prompts the server to generate a root token with a provided configuration
     #[clap(long)]
-    init: bool
+    init: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
@@ -81,7 +81,7 @@ async fn main() -> Result<()> {
                     config::reinit_from_config(config.clone()).await?;
                     attic_server::run_migrations(config.clone()).await?;
                 }
-                //run server                
+                //run server
                 run_monolithic(opts, config).await?;
             } else {
                 //no config present, generate monolithic config and run
@@ -100,7 +100,7 @@ async fn main() -> Result<()> {
                 //if we're told to reinit, reinit using provided config
                 if opts.init == true {
                     config::reinit_from_config(config.clone()).await?;
-                    
+
                     //assuming this is a fresh setup, run db migrations to ready db
                     //TODO: What if it's *not* a fresh setup? Perhaps this can happen with another flag, rather than only happening during one mode
                     attic_server::run_migrations(config.clone()).await?;
@@ -115,7 +115,6 @@ async fn main() -> Result<()> {
                 }
                 attic_server::gc::run_garbage_collection(config.clone()).await;
             }
-            
         }
         ServerMode::DbMigrations => {
             if let Some(config) = config::load_config(opts.config.as_deref()).await {
@@ -146,9 +145,8 @@ async fn main() -> Result<()> {
                 eprintln!();
                 eprintln!("Enjoy!");
                 eprintln!("-----------------");
-                eprintln!(); 
+                eprintln!();
             }
-            
         }
     }
 
@@ -164,7 +162,7 @@ async fn run_monolithic(opts: Opts, config: Config) -> Result<()> {
 
     match api_server {
         Ok(()) => Ok(()),
-        Err(e) => Err(e)
+        Err(e) => Err(e),
     }
 }
 
